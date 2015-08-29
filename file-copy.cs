@@ -120,21 +120,6 @@ namespace copyDirAndFiles
                 System.IO.File.Move(path, (Path.GetDirectoryName(path)+Path.AltDirectorySeparatorChar+file));
                 Console.WriteLine("Processed file '{0}' to '{1}'.", path, file);	    
             }
-
-
-
-            /*
-
-            //Directories
-            IEnumerable<string> dirNameEnumeration = Directory.EnumerateDirectories(path, searchPattern, SearchOption.AllDirectories);
-
-            //Files
-            foreach (string file in files)
-            {
-                System.IO.File.Move(file, ConvertFileName(file.ToLower()));
-            }
-*/
-
         }
     }
 }
