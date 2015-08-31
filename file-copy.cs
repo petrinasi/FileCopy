@@ -6,23 +6,15 @@ namespace copyDirAndFiles
 {
     public class CopyToLowerCase
     {
-        static public void Main (string[] args)
-        {
-            bool success = false;
-            foreach (string arg in args) {
-                Console.WriteLine("Args: " +arg);
-            }
-            
-            if (args.Length == 1) {
-                RenameFiles rename = new RenameFiles(args[(args.Length-1)]);
-                success = rename.Rename();   
-                Console.WriteLine("Rename() returned {0}", success);
+        static public void Main (string[] args)        {                  
+            if (args.Length == 1) {                
+                RenameFiles.Rename(args[0]);                
             } else if (args.Length == 2) {
                 string sourceDirectory = args[0];
                 string targetDirectory = args[1];
 
                 DirectoryInfo diSource = new DirectoryInfo(sourceDirectory);
-                DirectoryInfo diTarget = new DirectoryInfo(targetDirectory.ToLower());
+                DirectoryInfo diTarget = new DirectoryInfo(targetDirectory);
 
                 CopyDir.CopyAll(diSource, diTarget);
 
@@ -50,8 +42,8 @@ namespace copyDirAndFiles
                 // Copy each file into it's new directory. 
                 foreach (FileInfo fi in source.GetFiles())
                 {
-                    Console.WriteLine(@"Copying {0}\{1}", target.FullName, fi.Name);
-                    fi.CopyTo(Path.Combine(target.ToString(), fi.Name), true);
+                    Console.WriteLine(@"Copying {0}\{1}", target.FullName, fi.Name.ToLower());
+                    fi.CopyTo(Path.Combine(target.ToString(), fi.Name.ToLower()), true);
                 }
 
                 // Copy each subdirectory using recursion. 
@@ -66,16 +58,9 @@ namespace copyDirAndFiles
 
            
 
-        class RenameFiles {
-            string path;
-
-            public RenameFiles(string path) {
-                this.path = path;
-            }
-
-            public bool Rename() {
-                bool status = true;
-                int nmbrOfFiles, nmbrOfDirs = 0;
+        class RenameFiles {            
+            public static void Rename(string path) {                
+                //int nmbrOfFiles, nmbrOfDirs = 0;
 
                 if(File.Exists(path)) 
                 {
@@ -90,17 +75,13 @@ namespace copyDirAndFiles
                 else 
                 {
                     Console.WriteLine("{0} is not a valid file or directory.", path);
-                    status = false;
-                } 
-                return status;
+                }                
             }
 
             // Process all files in the directory passed in, recurse on any directories  
             // that are found, and process the files they contain. 
             public static void ProcessDirectory(string targetDirectory) 
-            {             
-                Console.WriteLine("targetDirectory: {0}", Path.GetFileName(targetDirectory).ToLower());
-                    
+            {                 
                 // Process the list of files found in the directory. 
                 string [] fileEntries = Directory.GetFiles(targetDirectory);
                 foreach(string fileName in fileEntries)
@@ -114,8 +95,7 @@ namespace copyDirAndFiles
 
             // Insert logic for processing found files here. 
             public static void ProcessFile(string path) 
-            {
-                
+            {   
                 string file = Path.GetFileName(path).ToLower();                
                 System.IO.File.Move(path, (Path.GetDirectoryName(path)+Path.AltDirectorySeparatorChar+file));
                 Console.WriteLine("Processed file '{0}' to '{1}'.", path, file);	    
